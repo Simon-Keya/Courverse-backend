@@ -32,7 +32,10 @@ export class CertificatesService {
     return certificate;
   }
 
-  async update(id: number, updateCertificateDto: UpdateCertificateDto): Promise<Certificate> {
+  async update(
+    id: number,
+    updateCertificateDto: UpdateCertificateDto,
+  ): Promise<Certificate> {
     const certificate = await this.findOne(id);
     Object.assign(certificate, updateCertificateDto);
     return this.certificateRepository.save(certificate);

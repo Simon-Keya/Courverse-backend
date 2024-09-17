@@ -1,6 +1,5 @@
 export const websocketConfig = {
-    cors: {
-      origin: '*',  // Allow all origins, configure as needed
-    },
-  };
-  
+  cors: {
+    origin: '*', // Allow all origins, configure as needed
+  },
+};

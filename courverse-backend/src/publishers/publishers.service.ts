@@ -32,7 +32,10 @@ export class PublishersService {
     return publisher;
   }
 
-  async update(id: number, updatePublisherDto: UpdatePublisherDto): Promise<Publisher> {
+  async update(
+    id: number,
+    updatePublisherDto: UpdatePublisherDto,
+  ): Promise<Publisher> {
     const publisher = await this.findOne(id);
     Object.assign(publisher, updatePublisherDto);
     return this.publisherRepository.save(publisher);

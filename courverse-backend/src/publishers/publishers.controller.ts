@@ -1,4 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+/* eslint-enable prettier/prettier */
+
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
 import { PublishersService } from './publishers.service';
@@ -23,7 +26,10 @@ export class PublishersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePublisherDto: UpdatePublisherDto) {
+  update(
+    @Param('id') id: number,
+    @Body() updatePublisherDto: UpdatePublisherDto,
+  ) {
     return this.publishersService.update(id, updatePublisherDto);
   }
 

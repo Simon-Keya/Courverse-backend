@@ -9,7 +9,7 @@ import { LoggingService } from './logging/logging.service';
 import { MonitoringModule } from './monitoring/monitoring.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
-import { RewardsModule } from './rewards/rewards.module';
+import { RewardsModule } from './rewards/reward.module';
 import { UsersModule } from './users/users.module';
 import { WebsocketsModule } from './websockets/websockets.module';
 

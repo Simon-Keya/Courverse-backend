@@ -8,8 +8,8 @@ export class CreateCertificateDto {
   recipientName: string;
 
   @IsNumber()
-  courseId: number;  // Foreign key reference to Course
+  courseId: number; // Foreign key reference to Course
 
   @IsString()
-  issueDate: string;  // Date when the certificate is issued
+  issueDate: string; // Date when the certificate is issued
 }

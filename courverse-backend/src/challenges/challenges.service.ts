@@ -32,7 +32,10 @@ export class ChallengesService {
     return challenge;
   }
 
-  async update(id: number, updateChallengeDto: UpdateChallengeDto): Promise<Challenge> {
+  async update(
+    id: number,
+    updateChallengeDto: UpdateChallengeDto,
+  ): Promise<Challenge> {
     const challenge = await this.findOne(id);
     Object.assign(challenge, updateChallengeDto);
     return this.challengeRepository.save(challenge);
