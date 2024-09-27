@@ -14,7 +14,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await this.hashPassword(createUserDto.password);
     const user = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -34,21 +34,26 @@ export class UsersService {
     return user;
   }
 
-  async findByUsername(username: string): Promise<User> {
+  async findByUsername(username: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { username } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+    // Update fields, only apply updates that are provided
     Object.assign(user, updateUserDto);
     if (updateUserDto.password) {
-      user.password = await bcrypt.hash(updateUserDto.password, 10);
+      user.password = await this.hashPassword(updateUserDto.password);
     }
     return this.userRepository.save(user);
   }
 
-  async remove(id: number): Promise<void> {
+  async delete(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
   }
 }

@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ChallengesService } from './challenges.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 
+@ApiTags('Challenges')
 @Controller('challenges')
 export class ChallengesController {
   constructor(private readonly challengesService: ChallengesService) {}

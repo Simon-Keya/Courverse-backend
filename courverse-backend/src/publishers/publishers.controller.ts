@@ -2,10 +2,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 /* eslint-enable prettier/prettier */
 
+import { ApiTags } from '@nestjs/swagger';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
 import { PublishersService } from './publishers.service';
 
+@ApiTags('publishers')
 @Controller('publishers')
 export class PublishersController {
   constructor(private readonly publishersService: PublishersService) {}

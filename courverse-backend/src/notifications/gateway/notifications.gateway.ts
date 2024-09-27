@@ -1,3 +1,4 @@
+import { forwardRef, Inject } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -13,7 +14,10 @@ export class NotificationsGateway
 {
   @WebSocketServer() server: Server;
 
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    @Inject(forwardRef(() => NotificationsService))
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);

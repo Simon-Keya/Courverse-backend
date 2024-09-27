@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -36,7 +38,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.usersService.remove(id);
+  delete(@Param('id') id: number) {
+    return this.usersService.delete(id); // Call the correct delete method
   }
 }

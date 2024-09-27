@@ -1,12 +1,9 @@
-import { DataSourceOptions } from 'typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions'; // Ensure the type is for Postgres
 
-export const ormConfig: DataSourceOptions = {
-  type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT, 10) || 5432,
-  username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || 'root',
-  database: process.env.DB_NAME || 'courverse',
+export const ormConfig: PostgresConnectionOptions = {
+  type: 'postgres', // Explicitly define the type
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: true,
+  migrations: [__dirname + '/../migrations/*{.ts,.js}'], // Optional: Include migration path
+  synchronize: false, // Use migrations instead of synchronization
+  migrationsRun: true, // Automatically run migrations
 };

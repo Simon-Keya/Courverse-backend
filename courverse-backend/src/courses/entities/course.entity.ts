@@ -5,9 +5,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Certificate } from '../../certificates/entities/certificate.entity'; // Import the Certificate entity
+import { Certificate } from '../../certificates/entities/certificate.entity';
 import { Challenge } from '../../challenges/entities/challenge.entity';
 import { Publisher } from '../../publishers/entities/publisher.entity';
+import { Quiz } from '../../quizzes/entities/quiz.entity';
 
 @Entity()
 export class Course {
@@ -29,6 +30,9 @@ export class Course {
   @OneToMany(() => Challenge, (challenge) => challenge.course)
   challenges: Challenge[];
 
-  @OneToMany(() => Certificate, (certificate) => certificate.course) // Add this line
-  certificates: Certificate[]; // Add this property
+  @OneToMany(() => Certificate, (certificate) => certificate.course)
+  certificates: Certificate[];
+
+  @OneToMany(() => Quiz, (quiz) => quiz.course)
+  quizzes: Quiz[];
 }

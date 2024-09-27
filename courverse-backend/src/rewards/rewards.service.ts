@@ -22,7 +22,9 @@ export class RewardsService {
   }
 
   async findOne(id: number): Promise<Reward> {
-    const reward = await this.rewardRepository.findOne(id);
+    const reward = await this.rewardRepository.findOne({
+      where: { id },
+    });
     if (!reward) {
       throw new NotFoundException(`Reward with ID ${id} not found`);
     }

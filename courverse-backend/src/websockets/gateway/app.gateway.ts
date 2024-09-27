@@ -8,10 +8,12 @@ import {
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({ cors: true })
-export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() private server: Server; // Marked as private to avoid unused variable warning
+export class AppGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  @WebSocketServer() private server: Server; // WebSocket server instance
 
-  afterInit(server: Server) {
+  afterInit() {
     console.log('WebSocket initialized');
   }
 

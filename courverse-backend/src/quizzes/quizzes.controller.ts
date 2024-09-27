@@ -2,10 +2,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 /* eslint-enable prettier/prettier */
 
+import { ApiTags } from '@nestjs/swagger';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { QuizzesService } from './quizzes.service';
 
+@ApiTags('quizzes')
 @Controller('quizzes')
 export class QuizzesController {
   constructor(private readonly quizzesService: QuizzesService) {}

@@ -2,11 +2,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 /* eslint-enable prettier/prettier */
 
+import { ApiTags } from '@nestjs/swagger';
 import { CreateProgressDto } from './dto/create-progress.dto';
 import { UpdateProgressDto } from './dto/update-progress.dto';
 import { Progress } from './entities/progress.entity';
 import { ProgressService } from './progress.service';
 
+@ApiTags('Progress')
 @Controller('progress')
 export class ProgressController {
   constructor(private readonly progressService: ProgressService) {}

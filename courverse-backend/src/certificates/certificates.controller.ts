@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CertificatesService } from './certificates.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
 import { UpdateCertificateDto } from './dto/update-certificate.dto';
 
+@ApiTags('Certificates')
 @Controller('certificates')
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}

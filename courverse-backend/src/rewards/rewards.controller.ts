@@ -1,8 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+/* eslint-enable prettier/prettier */
+import { ApiTags } from '@nestjs/swagger';
 import { CreateRewardDto } from './dto/create-reward.dto';
 import { UpdateRewardDto } from './dto/update-reward.dto';
 import { RewardsService } from './rewards.service';
 
+@ApiTags('Rewards')
 @Controller('rewards')
 export class RewardsController {
   constructor(private readonly rewardsService: RewardsService) {}
