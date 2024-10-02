@@ -16,4 +16,8 @@ export class UpdateCertificateDto {
   @IsString()
   @IsOptional()
   issueDate?: string;
+
+  @IsString() // Add the title property
+  @IsOptional() // Make the title optional
+  title?: string; // Title of the certificate
 }

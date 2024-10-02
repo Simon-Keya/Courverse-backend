@@ -12,4 +12,7 @@ export class CreateCertificateDto {
 
   @IsString()
   issueDate: string; // Date when the certificate is issued
+
+  @IsString() // Add the title property
+  title: string; // Title of the certificate
 }
