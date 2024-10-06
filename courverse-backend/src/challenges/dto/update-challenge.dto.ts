@@ -1,16 +1,15 @@
-import { ArrayNotEmpty, IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateChallengeDto {
   @IsString()
   @IsOptional()
-  title?: string;
+  title?: string; // Optional title for the challenge
 
   @IsString()
   @IsOptional()
-  description?: string;
+  description?: string; // Optional description for the challenge
 
   @IsArray()
-  @ArrayNotEmpty()
-  @IsOptional()
-  tasks?: string[];
+  @IsOptional() // Allow tasks to be omitted
+  tasks?: string[]; // Optional array of tasks related to the challenge
 }

@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChallengesService } from './challenges.service';
+import { CreateChallengeDto } from './dto/create-challenge.dto'; // Adjust the import path as needed
+import { UpdateChallengeDto } from './dto/update-challenge.dto'; // Adjust the import path as needed
 
 describe('ChallengesService', () => {
   let challengesService: ChallengesService;
@@ -29,7 +31,11 @@ describe('ChallengesService', () => {
 
   describe('create', () => {
     it('should create a challenge', async () => {
-      const createChallengeDto = { name: 'New Challenge' };
+      const createChallengeDto: CreateChallengeDto = {
+        title: 'New Challenge',
+        description: 'Challenge description here',
+        tasks: [], // Assuming tasks is an array, adjust based on your DTO definition
+      };
       await challengesService.create(createChallengeDto);
       expect(challengesService.create).toHaveBeenCalledWith(createChallengeDto);
     });
@@ -53,7 +59,11 @@ describe('ChallengesService', () => {
   describe('update', () => {
     it('should update a challenge', async () => {
       const id = 1;
-      const updateChallengeDto = { name: 'Updated Challenge' };
+      const updateChallengeDto: UpdateChallengeDto = {
+        title: 'Updated Challenge',
+        description: 'Updated description here',
+        tasks: [], // Assuming tasks is an array, adjust based on your DTO definition
+      };
       await challengesService.update(id, updateChallengeDto);
       expect(challengesService.update).toHaveBeenCalledWith(id, updateChallengeDto);
     });

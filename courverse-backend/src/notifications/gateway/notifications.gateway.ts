@@ -30,4 +30,9 @@ export class NotificationsGateway
   sendNotification(notification: any) {
     this.server.emit('notification', notification);
   }
+
+  handleMessage(data: { user: string; message: string }) {
+    console.log(`Message from ${data.user}: ${data.message}`);
+    this.server.emit('message', data);
+  }
 }

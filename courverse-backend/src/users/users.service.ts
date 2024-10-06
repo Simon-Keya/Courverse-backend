@@ -44,7 +44,6 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
-    // Update fields, only apply updates that are provided
     Object.assign(user, updateUserDto);
     if (updateUserDto.password) {
       user.password = await this.hashPassword(updateUserDto.password);

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 /* eslint-enable prettier/prettier */
-
 import { ApiTags } from '@nestjs/swagger';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { UpdatePublisherDto } from './dto/update-publisher.dto';
@@ -23,20 +22,20 @@ export class PublishersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.publishersService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.publishersService.findOne(parseInt(id, 10)); // Convert to number
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: number,
+    @Param('id') id: string, // id is string initially
     @Body() updatePublisherDto: UpdatePublisherDto,
   ) {
-    return this.publishersService.update(id, updatePublisherDto);
+    return this.publishersService.update(parseInt(id, 10), updatePublisherDto); // Convert to number
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.publishersService.remove(id);
+  remove(@Param('id') id: string) {
+    return this.publishersService.remove(parseInt(id, 10)); // Convert to number
   }
 }

@@ -35,7 +35,11 @@ describe('ChallengesController', () => {
 
   describe('create', () => {
     it('should call ChallengesService.create with correct parameters', async () => {
-      const createChallengeDto: CreateChallengeDto = { name: 'New Challenge' };
+      const createChallengeDto: CreateChallengeDto = {
+        title: 'New Challenge', // Use the correct property name
+        description: 'Challenge description here', // Add all required properties
+        tasks: [], // Assuming tasks is an array, adjust based on your DTO definition
+      };
       await challengesController.create(createChallengeDto);
       expect(challengesService.create).toHaveBeenCalledWith(createChallengeDto);
     });
@@ -50,26 +54,30 @@ describe('ChallengesController', () => {
 
   describe('findOne', () => {
     it('should call ChallengesService.findOne with correct parameters', async () => {
-      const id = '1';
+      const id = 1; // Use a number instead of a string
       await challengesController.findOne(id);
-      expect(challengesService.findOne).toHaveBeenCalledWith(+id);
+      expect(challengesService.findOne).toHaveBeenCalledWith(id);
     });
   });
 
   describe('update', () => {
     it('should call ChallengesService.update with correct parameters', async () => {
-      const id = '1';
-      const updateChallengeDto: UpdateChallengeDto = { name: 'Updated Challenge' };
+      const id = 1; // Use a number instead of a string
+      const updateChallengeDto: UpdateChallengeDto = {
+        title: 'Updated Challenge', // Use the correct property name
+        description: 'Updated description here', // Add all required properties
+        tasks: [], // Assuming tasks is an array, adjust based on your DTO definition
+      };
       await challengesController.update(id, updateChallengeDto);
-      expect(challengesService.update).toHaveBeenCalledWith(+id, updateChallengeDto);
+      expect(challengesService.update).toHaveBeenCalledWith(id, updateChallengeDto);
     });
   });
 
   describe('remove', () => {
     it('should call ChallengesService.remove with correct parameters', async () => {
-      const id = '1';
+      const id = 1; // Use a number instead of a string
       await challengesController.remove(id);
-      expect(challengesService.remove).toHaveBeenCalledWith(+id);
+      expect(challengesService.remove).toHaveBeenCalledWith(id);
     });
   });
 });

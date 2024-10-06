@@ -35,7 +35,11 @@ describe('ProgressController', () => {
 
   describe('create', () => {
     it('should call ProgressService.create with correct parameters', async () => {
-      const createProgressDto: CreateProgressDto = { courseId: 1, userId: 2 };
+      const createProgressDto: CreateProgressDto = {
+        courseId: 1,
+        userId: 2,
+        progressPercentage: 80, // Ensure this property exists in CreateProgressDto
+      };
       await progressController.create(createProgressDto);
       expect(progressService.create).toHaveBeenCalledWith(createProgressDto);
     });
@@ -51,7 +55,7 @@ describe('ProgressController', () => {
   describe('findOne', () => {
     it('should call ProgressService.findOne with correct parameters', async () => {
       const id = '1';
-      await progressController.findOne(id);
+      await progressController.findOne(+id); // Convert to number
       expect(progressService.findOne).toHaveBeenCalledWith(+id);
     });
   });
@@ -59,8 +63,10 @@ describe('ProgressController', () => {
   describe('update', () => {
     it('should call ProgressService.update with correct parameters', async () => {
       const id = '1';
-      const updateProgressDto: UpdateProgressDto = { progress: 80 };
-      await progressController.update(id, updateProgressDto);
+      const updateProgressDto: UpdateProgressDto = {
+        progressPercentage: 80, // Ensure this property exists in UpdateProgressDto
+      };
+      await progressController.update(+id, updateProgressDto); // Convert to number
       expect(progressService.update).toHaveBeenCalledWith(+id, updateProgressDto);
     });
   });
@@ -68,7 +74,7 @@ describe('ProgressController', () => {
   describe('remove', () => {
     it('should call ProgressService.remove with correct parameters', async () => {
       const id = '1';
-      await progressController.remove(id);
+      await progressController.remove(+id); // Convert to number
       expect(progressService.remove).toHaveBeenCalledWith(+id);
     });
   });

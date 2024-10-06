@@ -1,4 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateProgressDto } from './dto/create-progress.dto'; // Adjust the import path as needed
+import { UpdateProgressDto } from './dto/update-progress.dto'; // Adjust the import path as needed
 import { ProgressService } from './progress.service';
 
 describe('ProgressService', () => {
@@ -29,7 +31,12 @@ describe('ProgressService', () => {
 
   describe('create', () => {
     it('should create progress', async () => {
-      const createProgressDto = { courseId: 1, userId: 2 };
+      const createProgressDto: CreateProgressDto = {
+        courseId: 1,
+        userId: 2,
+        progressPercentage: 50, // Include the required property
+      };
+
       await progressService.create(createProgressDto);
       expect(progressService.create).toHaveBeenCalledWith(createProgressDto);
     });
@@ -53,7 +60,10 @@ describe('ProgressService', () => {
   describe('update', () => {
     it('should update progress', async () => {
       const id = 1;
-      const updateProgressDto = { progress: 80 };
+      const updateProgressDto: UpdateProgressDto = {
+        progressPercentage: 80, // Ensure you use the correct property
+      };
+
       await progressService.update(id, updateProgressDto);
       expect(progressService.update).toHaveBeenCalledWith(id, updateProgressDto);
     });

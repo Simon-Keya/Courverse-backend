@@ -35,7 +35,11 @@ describe('QuizzesController', () => {
 
   describe('create', () => {
     it('should call QuizzesService.create with correct parameters', async () => {
-      const createQuizDto: CreateQuizDto = { title: 'New Quiz', description: 'Quiz description' };
+      const createQuizDto: CreateQuizDto = {
+        title: 'New Quiz',
+        questions: [], // Assuming it's an array of questions
+        duration: 60, // Add a default duration, e.g., 60 minutes
+      };
       await quizzesController.create(createQuizDto);
       expect(quizzesService.create).toHaveBeenCalledWith(createQuizDto);
     });
@@ -50,26 +54,28 @@ describe('QuizzesController', () => {
 
   describe('findOne', () => {
     it('should call QuizzesService.findOne with correct parameters', async () => {
-      const id = '1';
-      await quizzesController.findOne(id);
-      expect(quizzesService.findOne).toHaveBeenCalledWith(+id);
+      const id = 1; // Pass id as a number
+      await quizzesController.findOne(id); // No need to convert to string
+      expect(quizzesService.findOne).toHaveBeenCalledWith(id);
     });
   });
 
   describe('update', () => {
     it('should call QuizzesService.update with correct parameters', async () => {
-      const id = '1';
-      const updateQuizDto: UpdateQuizDto = { title: 'Updated Quiz' };
-      await quizzesController.update(id, updateQuizDto);
-      expect(quizzesService.update).toHaveBeenCalledWith(+id, updateQuizDto);
+      const id = 1; // Pass id as a number
+      const updateQuizDto: UpdateQuizDto = {
+        title: 'Updated Quiz',
+      };
+      await quizzesController.update(id, updateQuizDto); // No need to convert to string
+      expect(quizzesService.update).toHaveBeenCalledWith(id, updateQuizDto);
     });
   });
 
   describe('remove', () => {
     it('should call QuizzesService.remove with correct parameters', async () => {
-      const id = '1';
-      await quizzesController.remove(id);
-      expect(quizzesService.remove).toHaveBeenCalledWith(+id);
+      const id = 1; // Pass id as a number
+      await quizzesController.remove(id); // No need to convert to string
+      expect(quizzesService.remove).toHaveBeenCalledWith(id);
     });
   });
 });

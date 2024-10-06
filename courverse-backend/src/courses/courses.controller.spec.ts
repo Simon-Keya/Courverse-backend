@@ -35,7 +35,10 @@ describe('CoursesController', () => {
 
   describe('create', () => {
     it('should call CoursesService.create with correct parameters', async () => {
-      const createCourseDto: CreateCourseDto = { title: 'New Course', description: 'Course description' };
+      const createCourseDto: CreateCourseDto = {
+        title: 'New Course',
+        description: 'Course description',
+      };
       await coursesController.create(createCourseDto);
       expect(coursesService.create).toHaveBeenCalledWith(createCourseDto);
     });
@@ -50,26 +53,26 @@ describe('CoursesController', () => {
 
   describe('findOne', () => {
     it('should call CoursesService.findOne with correct parameters', async () => {
-      const id = '1';
+      const id = 1; // Change id from string to number
       await coursesController.findOne(id);
-      expect(coursesService.findOne).toHaveBeenCalledWith(+id);
+      expect(coursesService.findOne).toHaveBeenCalledWith(id); // No need for +id
     });
   });
 
   describe('update', () => {
     it('should call CoursesService.update with correct parameters', async () => {
-      const id = '1';
+      const id = 1; // Change id from string to number
       const updateCourseDto: UpdateCourseDto = { title: 'Updated Course' };
       await coursesController.update(id, updateCourseDto);
-      expect(coursesService.update).toHaveBeenCalledWith(+id, updateCourseDto);
+      expect(coursesService.update).toHaveBeenCalledWith(id, updateCourseDto); // No need for +id
     });
   });
 
   describe('remove', () => {
     it('should call CoursesService.remove with correct parameters', async () => {
-      const id = '1';
+      const id = 1; // Change id from string to number
       await coursesController.remove(id);
-      expect(coursesService.remove).toHaveBeenCalledWith(+id);
+      expect(coursesService.remove).toHaveBeenCalledWith(id); // No need for +id
     });
   });
 });

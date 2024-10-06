@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateQuizDto } from './dto/create-quiz.dto'; // Ensure you import the DTO
 import { QuizzesService } from './quizzes.service';
 
 describe('QuizzesService', () => {
@@ -29,7 +30,11 @@ describe('QuizzesService', () => {
 
   describe('create', () => {
     it('should create a quiz', async () => {
-      const createQuizDto = { title: 'New Quiz', description: 'Quiz description' };
+      const createQuizDto: CreateQuizDto = {
+        title: 'New Quiz',
+        questions: [], // Assuming it's an array of questions
+        duration: 60, // Example duration, e.g., 60 minutes
+      };
       await quizzesService.create(createQuizDto);
       expect(quizzesService.create).toHaveBeenCalledWith(createQuizDto);
     });

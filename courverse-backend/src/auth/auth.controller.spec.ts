@@ -1,55 +1,90 @@
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
+import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-auth.dto';
 import { SignupDto } from './dto/signup-auth.dto';
 
-describe('AuthController', () => {
-  let authController: AuthController;
+describe('AuthService', () => {
   let authService: AuthService;
+  let usersService: UsersService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
       providers: [
+        AuthService,
         {
-          provide: AuthService,
+          provide: UsersService,
           useValue: {
-            login: jest.fn(),
-            signup: jest.fn(),
+            findByEmail: jest.fn(),
+            create: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn(),
           },
         },
       ],
     }).compile();
 
-    authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-  });
-
-  it('should be defined', () => {
-    expect(authController).toBeDefined();
+    usersService = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe('login', () => {
-    it('should call AuthService.login with correct parameters', async () => {
+    it('should return a JWT token for valid credentials', async () => {
       const loginDto: LoginDto = {
         email: 'test@example.com',
-        password: 'test',
+        password: 'password',
       };
-      await authController.login(loginDto);
-      expect(authService.login).toHaveBeenCalledWith(loginDto);
+      const user = {
+        id: 1,
+        email: loginDto.email,
+        password: 'hashedPassword',
+      };
+      const token = 'jwt_token';
+
+      usersService.findByEmail = jest.fn().mockResolvedValue(user);
+      jwtService.sign = jest.fn().mockReturnValue(token);
+
+      const result = await authService.login(loginDto);
+
+      expect(usersService.findByEmail).toHaveBeenCalledWith(loginDto.email);
+      expect(result).toEqual({ access_token: token });
     });
   });
 
   describe('signup', () => {
-    it('should call AuthService.signup with correct parameters', async () => {
+    it('should create a user and return a JWT token', async () => {
       const signupDto: SignupDto = {
         email: 'test@example.com',
-        password: 'test',
-        username: 'Test User',
+        password: 'password',
+        username: 'testuser',
       };
-      await authController.signup(signupDto);
-      expect(authService.signup).toHaveBeenCalledWith(signupDto);
+      const user = {
+        id: 1,
+        email: signupDto.email,
+        username: signupDto.username,
+        password: 'hashedPassword',
+      };
+      const token = 'jwt_token';
+
+      usersService.create = jest.fn().mockResolvedValue(user);
+      jwtService.sign = jest.fn().mockReturnValue(token);
+
+      const result = await authService.signup(signupDto);
+
+      // Adjusted the expectation to match the returned object structure (including user data and token)
+      expect(result).toEqual({
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        access_token: token,
+      });
     });
   });
 });

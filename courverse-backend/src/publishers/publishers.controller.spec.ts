@@ -35,7 +35,11 @@ describe('PublishersController', () => {
 
   describe('create', () => {
     it('should call PublishersService.create with correct parameters', async () => {
-      const createPublisherDto: CreatePublisherDto = { name: 'Test Publisher' };
+      const createPublisherDto: CreatePublisherDto = {
+        name: 'Test Publisher',
+        email: 'test@example.com',
+        website: 'https://testpublisher.com',
+      };
       await publishersController.create(createPublisherDto);
       expect(publishersService.create).toHaveBeenCalledWith(createPublisherDto);
     });
@@ -52,16 +56,23 @@ describe('PublishersController', () => {
     it('should call PublishersService.findOne with correct parameters', async () => {
       const id = '1';
       await publishersController.findOne(id);
-      expect(publishersService.findOne).toHaveBeenCalledWith(+id);
+      expect(publishersService.findOne).toHaveBeenCalledWith(parseInt(id, 10));
     });
   });
 
   describe('update', () => {
     it('should call PublishersService.update with correct parameters', async () => {
       const id = '1';
-      const updatePublisherDto: UpdatePublisherDto = { name: 'Updated Publisher' };
+      const updatePublisherDto: UpdatePublisherDto = {
+        name: 'Updated Publisher',
+        email: 'updated@example.com',
+        website: 'https://updatedpublisher.com',
+      };
       await publishersController.update(id, updatePublisherDto);
-      expect(publishersService.update).toHaveBeenCalledWith(+id, updatePublisherDto);
+      expect(publishersService.update).toHaveBeenCalledWith(
+        parseInt(id, 10),
+        updatePublisherDto,
+      );
     });
   });
 
@@ -69,7 +80,7 @@ describe('PublishersController', () => {
     it('should call PublishersService.remove with correct parameters', async () => {
       const id = '1';
       await publishersController.remove(id);
-      expect(publishersService.remove).toHaveBeenCalledWith(+id);
+      expect(publishersService.remove).toHaveBeenCalledWith(parseInt(id, 10));
     });
   });
 });

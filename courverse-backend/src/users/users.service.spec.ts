@@ -14,7 +14,7 @@ describe('UsersService', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            delete: jest.fn(),
           },
         },
       ],
@@ -29,7 +29,12 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should create a user', async () => {
-      const createUserDto = { email: 'test@example.com', password: 'password', name: 'Test User' };
+      const createUserDto = {
+        email: 'test@example.com',
+        password: 'password',
+        name: 'Test User',
+        username: 'testuser', // Added the missing 'username'
+      };
       await usersService.create(createUserDto);
       expect(usersService.create).toHaveBeenCalledWith(createUserDto);
     });
@@ -53,17 +58,21 @@ describe('UsersService', () => {
   describe('update', () => {
     it('should update a user', async () => {
       const id = 1;
-      const updateUserDto = { name: 'Updated User' };
+      const updateUserDto = {
+        username: 'updateduser', // Ensure this matches UpdateUserDto structure
+        email: 'updated@example.com',
+        name: 'Updated User',
+      };
       await usersService.update(id, updateUserDto);
       expect(usersService.update).toHaveBeenCalledWith(id, updateUserDto);
     });
   });
 
-  describe('remove', () => {
-    it('should remove a user', async () => {
+  describe('delete', () => {
+    it('should delete a user', async () => {
       const id = 1;
-      await usersService.remove(id);
-      expect(usersService.remove).toHaveBeenCalledWith(id);
+      await usersService.delete(id);
+      expect(usersService.delete).toHaveBeenCalledWith(id);
     });
   });
 });

@@ -1,12 +1,15 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateProgressDto {
   @IsNotEmpty()
-  userId: number;
-
-  @IsNotEmpty()
+  @IsNumber()
   courseId: number;
 
   @IsNotEmpty()
-  progressPercentage: number;
+  @IsNumber()
+  userId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  progressPercentage: number; // Ensure this property is defined
 }

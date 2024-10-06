@@ -19,7 +19,7 @@ describe('UsersController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            delete: jest.fn(), // Updated to delete
           },
         },
       ],
@@ -38,6 +38,7 @@ describe('UsersController', () => {
       const createUserDto: CreateUserDto = {
         email: 'test@example.com',
         password: 'password',
+        username: 'testuser', // Added required username field
       };
       await usersController.create(createUserDto);
       expect(usersService.create).toHaveBeenCalledWith(createUserDto);
@@ -53,26 +54,26 @@ describe('UsersController', () => {
 
   describe('findOne', () => {
     it('should call UsersService.findOne with correct parameters', async () => {
-      const id = 1;
-      await usersController.findOne(id);
-      expect(usersService.findOne).toHaveBeenCalledWith(id);
+      const id = '1';
+      await usersController.findOne(+id); // Converted string to number
+      expect(usersService.findOne).toHaveBeenCalledWith(+id);
     });
   });
 
   describe('update', () => {
     it('should call UsersService.update with correct parameters', async () => {
-      const id = 1;
-      const updateUserDto: UpdateUserDto = {};
-      await usersController.update(id, updateUserDto);
-      expect(usersService.update).toHaveBeenCalledWith(id, updateUserDto);
+      const id = '1';
+      const updateUserDto: UpdateUserDto = { username: 'UpdatedUser' }; // Using valid update data
+      await usersController.update(+id, updateUserDto);
+      expect(usersService.update).toHaveBeenCalledWith(+id, updateUserDto);
     });
   });
 
-  describe('remove', () => {
-    it('should call UsersService.remove with correct parameters', async () => {
-      const id = 1;
-      await usersController.remove(id);
-      expect(usersService.remove).toHaveBeenCalledWith(id);
+  describe('delete', () => {
+    it('should call UsersService.delete with correct parameters', async () => {
+      const id = '1';
+      await usersController.delete(+id); // Converted string to number
+      expect(usersService.delete).toHaveBeenCalledWith(+id);
     });
   });
 });
