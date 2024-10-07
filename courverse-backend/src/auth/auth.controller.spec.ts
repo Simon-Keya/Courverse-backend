@@ -48,8 +48,9 @@ describe('AuthService', () => {
       };
       const token = 'jwt_token';
 
-      usersService.findByEmail = jest.fn().mockResolvedValue(user);
-      jwtService.sign = jest.fn().mockReturnValue(token);
+      // Mock the findByEmail and sign methods before calling the login method
+      (usersService.findByEmail as jest.Mock).mockResolvedValue(user);
+      (jwtService.sign as jest.Mock).mockReturnValue(token);
 
       const result = await authService.login(loginDto);
 
@@ -73,12 +74,12 @@ describe('AuthService', () => {
       };
       const token = 'jwt_token';
 
-      usersService.create = jest.fn().mockResolvedValue(user);
-      jwtService.sign = jest.fn().mockReturnValue(token);
+      (usersService.create as jest.Mock).mockResolvedValue(user);
+      (jwtService.sign as jest.Mock).mockReturnValue(token);
 
       const result = await authService.signup(signupDto);
 
-      // Adjusted the expectation to match the returned object structure (including user data and token)
+      // Adjust the expectation to match the returned object structure
       expect(result).toEqual({
         id: user.id,
         email: user.email,

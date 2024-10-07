@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
+import { LoginDto } from './dto/login-auth.dto';
 import { SignupDto } from './dto/signup-auth.dto';
 
 @Injectable()
@@ -11,18 +12,22 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findByUsername(username);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Exclude password manually without destructuring
       const result = { ...user };
-      delete result.password; // Explicitly remove password
+      delete result.password; // Exclude password from result
       return result;
     }
     return null;
   }
 
-  async login(user: any) {
+  async login(loginDto: LoginDto) {
+    const user = await this.validateUser(loginDto.email, loginDto.password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -31,9 +36,20 @@ export class AuthService {
 
   async signup(signupAuthDto: SignupDto) {
     const hashedPassword = await bcrypt.hash(signupAuthDto.password, 10);
-    return this.usersService.create({
+    const user = await this.usersService.create({
       ...signupAuthDto,
       password: hashedPassword,
     });
+
+    const result = { ...user };
+    delete result.password;
+
+    return {
+      ...result,
+      access_token: this.jwtService.sign({
+        username: result.username,
+        sub: result.id,
+      }),
+    };
   }
 }

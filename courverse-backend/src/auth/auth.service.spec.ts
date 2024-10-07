@@ -1,5 +1,7 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-auth.dto';
@@ -17,14 +19,14 @@ describe('AuthService', () => {
         {
           provide: UsersService,
           useValue: {
-            findByEmail: jest.fn(), // Mocking findByEmail
-            create: jest.fn(), // Mocking create method
+            findByEmail: jest.fn(),
+            create: jest.fn(),
           },
         },
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn(), // Mocking sign function for JWT
+            sign: jest.fn(),
           },
         },
       ],
@@ -41,23 +43,44 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'password',
       };
+
+      const hashedPassword = await bcrypt.hash(loginDto.password, 10); // Hash the correct password
       const user = {
         id: 1,
         email: loginDto.email,
-        password: 'hashedPassword',
+        password: hashedPassword, // Use the hashed password here
+        username: 'testuser',
       };
       const token = 'jwt_token';
 
-      // Mocking the response of usersService.findByEmail
+      // Mock the findByEmail and sign methods
       (usersService.findByEmail as jest.Mock).mockResolvedValue(user);
-      // Mocking the response of jwtService.sign
       (jwtService.sign as jest.Mock).mockReturnValue(token);
 
       const result = await authService.login(loginDto);
 
-      // Expectations
       expect(usersService.findByEmail).toHaveBeenCalledWith(loginDto.email);
       expect(result).toEqual({ access_token: token });
+    });
+
+    it('should throw UnauthorizedException for invalid credentials', async () => {
+      const loginDto: LoginDto = {
+        email: 'test@example.com',
+        password: 'wrongpassword', // Wrong password
+      };
+
+      // Mock the findByEmail method to return a user with a hashed password
+      const hashedPassword = await bcrypt.hash('password', 10); // Hash the correct password
+      const user = {
+        id: 1,
+        email: loginDto.email,
+        password: hashedPassword, // Set the hashed password
+        username: 'testuser',
+      };
+
+      (usersService.findByEmail as jest.Mock).mockResolvedValue(user);
+
+      await expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException); // Ensure proper formatting
     });
   });
 
@@ -68,11 +91,12 @@ describe('AuthService', () => {
         password: 'password',
         username: 'testuser',
       };
+      const hashedPassword = await bcrypt.hash(signupDto.password, 10); // Hash the password
       const user = {
         id: 1,
         email: signupDto.email,
         username: signupDto.username,
-        password: 'hashedPassword',
+        password: hashedPassword, // Use the hashed password here
       };
       const token = 'jwt_token';
 
@@ -83,7 +107,7 @@ describe('AuthService', () => {
 
       const result = await authService.signup(signupDto);
 
-      // Adjusted the expectation to match the returned object structure (including user data and token)
+      // Adjusted the expectation to match the returned object structure
       expect(result).toEqual({
         id: user.id,
         email: user.email,
