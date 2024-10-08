@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { SignupAuthDto } from './dto/signup-auth.dto';
+import { SignupDto } from './dto/signup-auth.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
@@ -17,7 +17,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signup(@Body() signupAuthDto: SignupAuthDto) {
+  async signup(@Body() signupAuthDto: SignupDto) {
     return this.authService.signup(signupAuthDto);
   }
 

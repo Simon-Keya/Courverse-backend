@@ -16,7 +16,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
       const result = { ...user };
-      delete result.password; // Exclude password from result
+      delete result.password;
       return result;
     }
     return null;

@@ -1,5 +1,7 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-auth.dto';
@@ -41,14 +43,16 @@ describe('AuthService', () => {
         email: 'test@example.com',
         password: 'password',
       };
+
+      const hashedPassword = await bcrypt.hash(loginDto.password, 10);
       const user = {
         id: 1,
         email: loginDto.email,
-        password: 'hashedPassword',
+        password: hashedPassword,
+        username: 'testuser',
       };
       const token = 'jwt_token';
 
-      // Mock the findByEmail and sign methods before calling the login method
       (usersService.findByEmail as jest.Mock).mockResolvedValue(user);
       (jwtService.sign as jest.Mock).mockReturnValue(token);
 
@@ -56,6 +60,25 @@ describe('AuthService', () => {
 
       expect(usersService.findByEmail).toHaveBeenCalledWith(loginDto.email);
       expect(result).toEqual({ access_token: token });
+    });
+
+    it('should throw UnauthorizedException for invalid credentials', async () => {
+      const loginDto: LoginDto = {
+        email: 'test@example.com',
+        password: 'wrongpassword',
+      };
+
+      const hashedPassword = await bcrypt.hash('password', 10);
+      const user = {
+        id: 1,
+        email: loginDto.email,
+        password: hashedPassword,
+        username: 'testuser',
+      };
+
+      (usersService.findByEmail as jest.Mock).mockResolvedValue(user);
+
+      await expect(authService.login(loginDto)).rejects.toThrow(UnauthorizedException);
     });
   });
 
@@ -66,11 +89,13 @@ describe('AuthService', () => {
         password: 'password',
         username: 'testuser',
       };
+
+      const hashedPassword = await bcrypt.hash(signupDto.password, 10);
       const user = {
         id: 1,
         email: signupDto.email,
         username: signupDto.username,
-        password: 'hashedPassword',
+        password: hashedPassword,
       };
       const token = 'jwt_token';
 
@@ -79,7 +104,6 @@ describe('AuthService', () => {
 
       const result = await authService.signup(signupDto);
 
-      // Adjust the expectation to match the returned object structure
       expect(result).toEqual({
         id: user.id,
         email: user.email,
