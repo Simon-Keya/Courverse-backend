@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm'; // Import TypeOrmModule
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CertificatesModule } from './certificates/certificates.module';
 import { ChallengesModule } from './challenges/challenges.module';
@@ -12,28 +12,29 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { PublishersModule } from './publishers/publishers.module';
 import { QuizzesModule } from './quizzes/quizzes.module';
 import { RewardsModule } from './rewards/rewards.module';
-import { User } from './users/entities/user.entity'; // Import User entity
 import { UsersModule } from './users/users.module';
 import { WebsocketsModule } from './websockets/websockets.module';
+import { EnrollmentsModule } from './enrollments/enrollments.module';
+import { ProgressModule } from './progress/progress.module';
+import { CategoriesModule } from './categories/categories.module';
+import { SectionsModule } from './sections/sections.module';
+import { LessonsModule } from './lessons/lessons.module';
+import { WishlistModule } from './wishlist/wishlist.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // Load environment variables
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'postgres', // Database type
-      host: process.env.DB_HOST, // Database host from env variables
-      port: +process.env.DB_PORT, // Database port from env variables
-      username: process.env.DB_USERNAME, // Database username from env variables
-      password: process.env.DB_PASSWORD, // Database password from env variables
-      database: process.env.DB_NAME, // Database name from env variables
-      autoLoadEntities: true, // Automatically load entities from modules
-      synchronize: process.env.NODE_ENV === 'development', // Synchronize only in development mode
-      migrations: [__dirname + '/../migrations/*{.ts,.js}'], // Path to migration files
-      migrationsRun: true, // Automatically run migrations on startup
+      type: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: +(process.env.DB_PORT || 5432),
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'courverse',
+      autoLoadEntities: true,
+      synchronize: process.env.NODE_ENV !== 'production',
+      logging: process.env.NODE_ENV === 'development',
     }),
-    TypeOrmModule.forFeature([User]), // Make User entity available globally
-    PublishersModule,
-    DatabaseModule,
     AuthModule,
     UsersModule,
     CoursesModule,
@@ -45,6 +46,13 @@ import { WebsocketsModule } from './websockets/websockets.module';
     NotificationsModule,
     WebsocketsModule,
     MonitoringModule,
+    DatabaseModule,
+    EnrollmentsModule,
+    ProgressModule,
+    CategoriesModule,
+    SectionsModule,
+    LessonsModule,
+    WishlistModule,
   ],
   providers: [LoggingService],
 })

@@ -21,7 +21,7 @@ export class PublishersService {
     return this.publisherRepository.find({ relations: ['courses'] });
   }
 
-  async findOne(id: number): Promise<Publisher> {
+  async findOne(id: string): Promise<Publisher> {
     const publisher = await this.publisherRepository.findOne({
       where: { id },
       relations: ['courses'],
@@ -32,16 +32,28 @@ export class PublishersService {
     return publisher;
   }
 
-  async update(
-    id: number,
-    updatePublisherDto: UpdatePublisherDto,
-  ): Promise<Publisher> {
+  async findByUserId(userId: string): Promise<Publisher | null> {
+    return this.publisherRepository.findOne({ where: { userId } });
+  }
+
+  async findBySlug(slug: string): Promise<Publisher> {
+    const publisher = await this.publisherRepository.findOne({
+      where: { slug },
+      relations: ['courses'],
+    });
+    if (!publisher) {
+      throw new NotFoundException('Publisher not found');
+    }
+    return publisher;
+  }
+
+  async update(id: string, updatePublisherDto: UpdatePublisherDto): Promise<Publisher> {
     const publisher = await this.findOne(id);
     Object.assign(publisher, updatePublisherDto);
     return this.publisherRepository.save(publisher);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     const publisher = await this.findOne(id);
     await this.publisherRepository.remove(publisher);
   }

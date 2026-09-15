@@ -1,43 +1,37 @@
-/* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-/* eslint-enable prettier/prettier */
-
-import { ApiTags } from '@nestjs/swagger';
-import { CreateProgressDto } from './dto/create-progress.dto';
-import { UpdateProgressDto } from './dto/update-progress.dto';
-import { Progress } from './entities/progress.entity';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ProgressService } from './progress.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 
-@ApiTags('Progress')
+@ApiTags('progress')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('progress')
 export class ProgressController {
   constructor(private readonly progressService: ProgressService) {}
 
-  @Post()
-  create(@Body() createProgressDto: CreateProgressDto): Promise<Progress> {
-    return this.progressService.create(createProgressDto);
+  @Post('lessons/:lessonId/complete')
+  completeLesson(
+    @CurrentUser('id') userId: string,
+    @Param('lessonId') lessonId: string,
+  ) {
+    return this.progressService.completeLesson(userId, lessonId);
   }
 
-  @Get()
-  findAll(): Promise<Progress[]> {
-    return this.progressService.findAll();
+  @Get('courses/:courseId')
+  getCourseProgress(
+    @CurrentUser('id') userId: string,
+    @Param('courseId') courseId: string,
+  ) {
+    return this.progressService.getCourseProgress(userId, courseId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<Progress> {
-    return this.progressService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: number,
-    @Body() updateProgressDto: UpdateProgressDto,
-  ): Promise<Progress> {
-    return this.progressService.update(id, updateProgressDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.progressService.remove(id);
+  @Get('lessons/:lessonId')
+  getLessonProgress(
+    @CurrentUser('id') userId: string,
+    @Param('lessonId') lessonId: string,
+  ) {
+    return this.progressService.getLessonProgress(userId, lessonId);
   }
 }

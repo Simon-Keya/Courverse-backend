@@ -1,47 +1,41 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CertificatesService } from './certificates.service';
-import { CreateCertificateDto } from './dto/create-certificate.dto';
-import { UpdateCertificateDto } from './dto/update-certificate.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { UserRole } from '../users/entities/user.entity';
 
 @ApiTags('Certificates')
 @Controller('certificates')
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
-  @Post()
-  create(@Body() createCertificateDto: CreateCertificateDto) {
-    return this.certificatesService.create(createCertificateDto);
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  myCertificates(@CurrentUser('id') userId: string) {
+    return this.certificatesService.findMyCertificates(userId);
   }
 
-  @Get()
-  findAll() {
-    return this.certificatesService.findAll();
+  @Get('credential/:credentialId')
+  findByCredential(@Param('credentialId') credentialId: string) {
+    return this.certificatesService.findByCredentialId(credentialId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  findOne(@Param('id') id: string) {
     return this.certificatesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: number,
-    @Body() updateCertificateDto: UpdateCertificateDto,
-  ) {
-    return this.certificatesService.update(id, updateCertificateDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.certificatesService.remove(id);
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  @ApiBearerAuth()
+  findAll() {
+    return this.certificatesService.findAll();
   }
 }
